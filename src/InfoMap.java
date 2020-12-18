@@ -18,13 +18,12 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
         // out put data
-        String[] data = new String[9];
+        String[] data = new String[7];
 
         //获取文件名字
         InputSplit inputSplit = (InputSplit) context.getInputSplit();
         String filename = ((FileSplit) inputSplit).getPath().getName();
         System.out.println("当前读取的文件名为：" + filename);
-
 
         // zheng ze biao da shi pi pei
         String pattern = "[^0-9]";
@@ -32,23 +31,8 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         Pattern r = Pattern.compile(pattern);
         // 现在创建 matcher 对象
         Matcher m = r.matcher(filename);
+        // @排名
         data[0] = m.replaceAll("").trim();
-
-
-//        //判断读取的行 InputSplit是否包含“[” 和 “]” 或读取的行为空
-//        if (line.indexOf("[") == 0 || line.indexOf("]") == 0 || line.trim().isEmpty()) {
-//            return;
-//        }
-//        //删除逗号
-//        line = line.substring(0, line.length() - 1);
-//        //删除逗号时可能会删掉每行最后的"}"就是判断数据是否符合json格式这里我们要加一层判断否则解析json数据会出错
-//        if (!line.endsWith("}")) {
-//            line = line.concat("}");
-//        }
-
-        //fix auto type
-        //line.replaceAll("@","");
-//        System.out.println(line);
 
         // read file
         String line = value.toString();
@@ -63,8 +47,10 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         if (movie == null || movie.trim().isEmpty()) {
             return;
         }
+        // @电影名 movie
         data[1] = movie;
-        //director
+
+        // @导演 director
         JSONArray directors = jo.getJSONArray("director");
         for (int i = 0; i < directors.size(); i++) {
             if (i != 0) {
@@ -73,7 +59,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
             data[2] += directors.getJSONObject(i).getString("name");
         }
 
-        //actors
+        // @主演 actors
         JSONArray actors = jo.getJSONArray("actor");
         for (int i = 0; i < actors.size(); i++) {
             if (i != 0) {
@@ -82,18 +68,28 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
             data[2] += actors.getJSONObject(i).getString("name");
         }
 
-        // datePublished
+        // @上映日期 datePublished
         data[3] = jo.getString("datePublished");
-//        data[1] = name.trim();
-//        data[2] = jsonObject.getString("actors");
-//        data[3] = jsonObject.getString("time");
-//        data[4] = jsonObject.getString("score");
-        //循环判空
+
+        // @制片国家/地区 country
+        data[4] = jo.getString("country");
+
+        // @类型 mvtype
+        data[5] = jo.getString("type");
+
+        // @评分 rate
+        data[6] = jo.getString("ratingValue");
+
+        // @评分数量 ratingCount
+        data[6] = jo.getString("ratingCount");
+
+//        //循环判空
 //        for (String i : data) {
 //            if (i == null || i.equals("")) {
 //                return;
 //            }
 //        }
+
         //分隔数据
         String end = "";
         for (String item : data) {
