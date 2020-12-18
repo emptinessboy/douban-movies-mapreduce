@@ -18,7 +18,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
         // out put data
-        String[] data = new String[7];
+        String[] data = new String[8];
 
         //获取文件名字
         InputSplit inputSplit = (InputSplit) context.getInputSplit();
@@ -78,10 +78,10 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         data[5] = jo.getString("type");
 
         // @评分 rate
-        data[6] = jo.getString("ratingValue");
+        data[6] = jo.getJSONObject("aggregateRating").getString("ratingValue");
 
         // @评分数量 ratingCount
-        data[7] = jo.getString("ratingCount");
+        data[7] = jo.getJSONObject("aggregateRating").getString("ratingCount");
 
 //        //循环判空
 //        for (String i : data) {
