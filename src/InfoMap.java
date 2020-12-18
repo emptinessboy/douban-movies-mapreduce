@@ -73,7 +73,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
             data[2] += directors.getJSONObject(i).getString("name");
         }
 
-        //director
+        //actors
         JSONArray actors = jo.getJSONArray("actor");
         for (int i = 0; i < actors.size(); i++) {
             if (i != 0) {
@@ -81,7 +81,9 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
             }
             data[2] += actors.getJSONObject(i).getString("name");
         }
-//        data[0] = jo.getJSONObject("director").getString("name");
+
+        // datePublished
+        data[3] = jo.getString("datePublished");
 //        data[1] = name.trim();
 //        data[2] = jsonObject.getString("actors");
 //        data[3] = jsonObject.getString("time");
