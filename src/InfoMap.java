@@ -8,7 +8,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import java.io.IOException;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
@@ -16,11 +17,23 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
 
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
+        // out put data
+        String[] data = new String[9];
+
         //获取文件名字
         InputSplit inputSplit = (InputSplit) context.getInputSplit();
         String filename = ((FileSplit) inputSplit).getPath().getName();
         System.out.println("当前读取的文件名为：" + filename);
-        String line = value.toString();
+
+
+        // zheng ze biao da shi pi pei
+        String pattern = "[^0-9]";
+        // 创建 Pattern 对象
+        Pattern r = Pattern.compile(pattern);
+        // 现在创建 matcher 对象
+        Matcher m = r.matcher(filename);
+        data[0] = m.replaceAll("").trim();
+
 
 //        //判断读取的行 InputSplit是否包含“[” 和 “]” 或读取的行为空
 //        if (line.indexOf("[") == 0 || line.indexOf("]") == 0 || line.trim().isEmpty()) {
@@ -36,19 +49,23 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         //fix auto type
         //line.replaceAll("@","");
 //        System.out.println(line);
+
+        // read file
+        String line = value.toString();
+
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
         //解析json数据
         JSONObject jo = JSON.parseObject(line);
-        String[] data = new String[9];
+
         String movie = jo.getString("name");
 
         //判断movie字段是否为空
         if (movie == null || movie.trim().isEmpty()) {
             return;
         }
-        data[0] = movie;
+        data[1] = movie;
         //director
-        data[0] = jo.getJSONArray("director").getJSONObject(0).getString("name")
+        data[2] = jo.getJSONArray("director").getJSONObject(0).getString("name");
 //        data[0] = jo.getJSONObject("director").getString("name");
 //        data[1] = name.trim();
 //        data[2] = jsonObject.getString("actors");
