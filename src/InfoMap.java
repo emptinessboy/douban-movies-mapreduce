@@ -65,7 +65,22 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         }
         data[1] = movie;
         //director
-        data[2] = jo.getJSONArray("director").getJSONObject(0).getString("name");
+        JSONArray directors = jo.getJSONArray("director");
+        for (int i = 0; i < directors.size(); i++) {
+            if (i != 0) {
+                data[2] += ",";
+            }
+            data[2] += directors.getJSONObject(i).getString("name");
+        }
+
+        //director
+        JSONArray actors = jo.getJSONArray("actor");
+        for (int i = 0; i < actors.size(); i++) {
+            if (i != 0) {
+                data[2] += ",";
+            }
+            data[2] += actors.getJSONObject(i).getString("name");
+        }
 //        data[0] = jo.getJSONObject("director").getString("name");
 //        data[1] = name.trim();
 //        data[2] = jsonObject.getString("actors");
