@@ -81,7 +81,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
         data[6] = jo.getString("ratingValue");
 
         // @评分数量 ratingCount
-        data[6] = jo.getString("ratingCount");
+        data[7] = jo.getString("ratingCount");
 
 //        //循环判空
 //        for (String i : data) {
