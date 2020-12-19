@@ -18,7 +18,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
         // out put data
-        String[] data = new String[8];
+        String[] data = new String[9];
 
         //获取文件名字
         InputSplit inputSplit = (InputSplit) context.getInputSplit();
@@ -52,6 +52,7 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
 
         // @导演 director
         JSONArray directors = jo.getJSONArray("director");
+        data[2] = "";
         for (int i = 0; i < directors.size(); i++) {
             if (i != 0) {
                 data[2] += ",";
@@ -61,27 +62,28 @@ public class InfoMap extends Mapper<LongWritable, Text, Text, NullWritable> {
 
         // @主演 actors
         JSONArray actors = jo.getJSONArray("actor");
+        data[3] = "";
         for (int i = 0; i < actors.size(); i++) {
             if (i != 0) {
-                data[2] += ",";
+                data[3] += ",";
             }
-            data[2] += actors.getJSONObject(i).getString("name");
+            data[3] += actors.getJSONObject(i).getString("name");
         }
 
         // @上映日期 datePublished
-        data[3] = jo.getString("datePublished");
+        data[4] = jo.getString("datePublished");
 
         // @制片国家/地区 country
-        data[4] = jo.getString("country");
+        data[5] = jo.getString("country");
 
         // @类型 mvtype
-        data[5] = jo.getString("type");
+        data[6] = jo.getString("type");
 
         // @评分 rate
-        data[6] = jo.getJSONObject("aggregateRating").getString("ratingValue");
+        data[7] = jo.getJSONObject("aggregateRating").getString("ratingValue");
 
         // @评分数量 ratingCount
-        data[7] = jo.getJSONObject("aggregateRating").getString("ratingCount");
+        data[8] = jo.getJSONObject("aggregateRating").getString("ratingCount");
 
 //        //循环判空
 //        for (String i : data) {
